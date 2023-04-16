@@ -1,0 +1,276 @@
+<div class="form">
+    <form class="login-form"></form>
+<div id="Mapa" width="100%" style="height: 280px;"></div>   
+
+<b>Calle</b>
+<input type="text" name="input-address-formated" id="input-address-formated"> <br>
+<b>Provincia</b>
+<input type="text" name="input-address" id="input-address">
+<b>Pais</b> 
+<input type="text" name="input-country" id="input-country"><br>
+<b>Ciudad</b> 
+<input type="text" name="input-city" id="input-city">
+<b>Codigo Postal</b>
+<input type="text" name="input-postal-code" id="input-postal-code"><br>
+<b>Latitud</b> 
+<input type="text" name="latitude" id="latitude">
+<b>Longitud</b> 
+<input type="text" name="longitude" id="longitude"><br>
+ 
+ 
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js">
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB41DRUbKWJHPxaFjMAwdrzWzbVKartNGg&callback=initMap&v=weekly?center=">
+    </script>
+     
+     
+       
+    <script type="application/javascript">
+        var map;
+        var marker;
+        var myLatlng = new google.maps.LatLng(-34.92154131348967, -57.94988148341132);
+        var geocoder = new google.maps.Geocoder();
+        function initialize() {
+            var mapOptions = {
+            zoom: 13,
+            center: myLatlng,
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+            };
+      map = new google.maps.Map(document.getElementById("Mapa"), mapOptions);
+          var marker;
+              google.maps.event.addListener(map, 'click', function(event) {
+              placeMarker(event.latLng);
+            });
+ 
+ 
+        function placeMarker(location) {
+            if (marker == null)
+            {
+                  marker = new google.maps.Marker({
+                    position: location,
+                    map: map,
+                    zoom:13
+                  });
+            }
+            else
+            {
+                marker.setPosition(location);
+            }
+            geocoder.geocode(
+                { location: location },
+                (
+                  results = google.maps.GeocoderResult,
+                  status= google.maps.GeocoderStatus
+                ) => {
+                  if (status === "OK") {
+                    if (results[0]) {
+                  console.log  (results[0].address_components);
+                   var address_components = results[0].address_components;
+                            var components={};
+                            jQuery.each(address_components,function(k,v1) {jQuery.each(v1.types,function(k2, v2){components[v2]=v1.long_name});});
+                            var city, postal_code,state,country,sublocality,street_number,route;
+                             
+                            console.log(components);
+                            if(components.locality) {
+                                city = components.locality;
+                            }
+     
+                            if(!city) {
+                                city = components.administrative_area_level_1;
+                            }
+     
+                            if(components.postal_code) {
+                                postal_code = components.postal_code;
+                            }
+                            if(components.postal_code) {
+                                postal_code = components.postal_code;
+                            }
+     
+                            if(components.administrative_area_level_1) {
+                                state = components.administrative_area_level_1;
+                            }
+                             
+                            if(components.route) {
+                                route = components.route;
+                            }
+                            if(components.sublocality_level_1) {
+                                sublocality = components.sublocality_level_1;
+                            }
+                            if(components.country) {
+                                country = components.country;
+                            }
+                            if(components.street_number) {
+                              street_number = components.street_number;
+                            }
+                            $('#input-address-formated').val(results[0].formatted_address);
+                            $('#input-address').val(state);
+                            $('#input-city').val(city);
+                            $('#input-country').val(country);
+                            $('#input-postal-code').val(postal_code);
+                            $('#input-street').val(route+', '+sublocality);
+                            $('#input-interior-number').val(street_number);
+                            $('#input-exterior-number').val(street_number);
+                            $('#latitude').val(marker.getPosition().lat());
+                            $('#longitude').val(marker.getPosition().lng());
+                   
+                    } else {
+                      window.alert("No results found");
+                    }
+                  } else {
+                    window.alert("Geocoder failed due to: " + status);
+                  }
+                }
+              );
+        }
+ 
+        }
+        google.maps.event.addDomListener(window, 'load', initialize);
+    </script>
+
+<button onclick="">Guardar Ubicacion</button>
+
+<button><a href="login.html">Volver al inicio</a></button>
+</form>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<style>
+    @import url(https://fonts.googleapis.com/css?family=Roboto:300);
+
+    a{
+  font-family: "Roboto", sans-serif;
+  text-transform: uppercase;
+  outline: 0;
+  background: #4CAF50;
+  width: 100%;
+  border: 0;
+  padding: 15px;
+  color: #FFFFFF;
+  font-size: 14px;
+  -webkit-transition: all 0.3 ease;
+  transition: all 0.3 ease;
+  cursor: pointer;
+
+}
+
+.login-page {
+width: 360px;
+padding: 8% 0 0;
+margin: auto;
+}
+.form {
+position: relative;
+z-index: 1;
+background: #FFFFFF;
+max-width:500px;
+margin: 0 auto 100px;
+padding: 45px;
+text-align: center;
+box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+}
+input {
+font-family: "Roboto", sans-serif;
+outline: 0;
+background: #f2f2f2;
+width: 32%;
+border: 0;
+margin: 0 px auto;
+padding: 20px;
+box-sizing: center;
+font-size: 12px;
+}
+button {
+font-family: "Roboto", sans-serif;
+text-transform: uppercase;
+outline: 0;
+background: #4CAF50;
+width: 100%;
+border: 0;
+padding: 15px;
+color: #FFFFFF;
+font-size: 14px;
+-webkit-transition: all 0.3 ease;
+transition: all 0.3 ease;
+cursor: pointer;
+}
+button:hover,.form button:active,.form button:focus {
+background: #43A047;
+}
+.form .message {
+margin: 15px 0 0;
+color: #b3b3b3;
+font-size: 12px;
+}
+.form .message a {
+color: #4CAF50;
+text-decoration: none;
+}
+.form .register-form {
+display: none;
+}
+.container {
+position: relative;
+z-index: 1;
+max-width: 300px;
+margin: 0 auto;
+}
+.container:before, .container:after {
+content: "";
+display: block;
+clear: both;
+}
+.container .info {
+margin: 50px auto;
+text-align: center;
+}
+.container .info h1 {
+margin: 0 0 15px;
+padding: 0;
+font-size: 36px;
+font-weight: 300;
+color: #1a1a1a;
+}
+.container .info span {
+color: #4d4d4d;
+font-size: 12px;
+}
+.container .info span a {
+color: #000000;
+text-decoration: none;
+}
+.container .info span .fa {
+color: #EF3B3A;
+}
+body {
+background: #76b852; /* fallback for old browsers */
+background: rgb(141,194,111);
+background: linear-gradient(90deg, rgba(141,194,111,1) 0%, rgba(118,184,82,1) 50%);
+font-family: "Roboto", sans-serif;
+-webkit-font-smoothing: antialiased;
+-moz-osx-font-smoothing: grayscale;      
+margin: 0 px auto;
+}
+</style>
